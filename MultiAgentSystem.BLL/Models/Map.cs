@@ -1,14 +1,11 @@
-﻿using System;
-using MultiAgentSystem.BLL.Interfaces;
+﻿using MultiAgentSystem.BLL.Interfaces;
 
 namespace MultiAgentSystem.BLL.Models
 {
     public class Map
     {
-        public int Width { get; }
-        public int Height { get; }
-
         private readonly Cell[] _cells;
+
         public Map(int width, int height)
         {
             Width = width;
@@ -16,49 +13,63 @@ namespace MultiAgentSystem.BLL.Models
 
             _cells = new Cell[width * height];
 
-            for (int y = 0; y < Height; y++)
+            for (var y = 0; y < Height; y++)
+            for (var x = 0; x < Width; x++)
             {
-                for (int x = 0; x < Width; x++)
-                {
-                    var index = GetCellIndex(x, y);
-                    _cells[index] = new Cell(new Position(x, y));
-                }
+                //TODO: Add generation strategy
+                var coefficient = (float) (x + y) / (Height + Width);
+                var depth = 60f * coefficient;
+                var index = GetCellIndex(x, y);
+                _cells[index] = new Cell(new Point(x, y), -30 + depth);
             }
         }
 
-        public void Move(IUnit unit, Position newPosition)
-        {
-            if (unit.Position.HasValue)
-            {
-                var oldPosition = unit.Position.Value;
-                var oldCell = GetCell(oldPosition);
+        public int Width { get; }
+        public int Height { get; }
 
-                var removed = oldCell.RemoveUnit(unit);
-                if (!removed)
-                {
-                    throw new Exception($"Unit ({unit}) not found in cell ({oldCell})");
-                }
-                //TODO: Add cell updated event
-            }
+        public float GetMaxDepth()
+        {
+            var maxdepth = float.MinValue;
+            foreach (var cell in _cells)
+                if (cell.Depth > maxdepth)
+                    maxdepth = cell.Depth;
+
+            return maxdepth;
+        }
+
+        public float GetMinDepth()
+        {
+            var minDepth = float.MaxValue;
+            foreach (var cell in _cells)
+                if (cell.Depth < minDepth)
+                    minDepth = cell.Depth;
+
+            return minDepth;
+        }
+
+        public void Move(IUnit unit, Point newPosition)
+        {
+            var oldPosition = unit.CurrentPosition;
+            var oldCell = GetCell(oldPosition);
+
+            oldCell.RemoveUnit(unit);
 
             var newCell = GetCell(newPosition);
             newCell.AddUnit(unit);
             unit.SetPosition(newPosition);
-            
-            //TODO: Add cell updated event
         }
 
-        private int GetCellIndex(int x, int y)
-        {
-            int index = Height * y + x;
-            return index;
-        }
-
-        private Cell GetCell(Position position)
+        public Cell GetCell(Point position)
         {
             var newCellIndex = GetCellIndex(position.X, position.Y);
             var newCell = _cells[newCellIndex];
             return newCell;
+        }
+
+        private int GetCellIndex(int x, int y)
+        {
+            var index = Height * y + x;
+            return index;
         }
     }
 }

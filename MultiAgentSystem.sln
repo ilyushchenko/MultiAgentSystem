@@ -5,6 +5,8 @@ VisualStudioVersion = 16.0.29509.3
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MultiAgentSystem.BLL", "MultiAgentSystem.BLL\MultiAgentSystem.BLL.csproj", "{51EC2950-51EA-402C-8FFE-4FFD67669D67}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MultiAgentSystem.UI", "MultiAgentSystem.UI\MultiAgentSystem.UI.csproj", "{65B5EFF7-9423-4FFE-A8A6-6758411E63E0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{51EC2950-51EA-402C-8FFE-4FFD67669D67}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{51EC2950-51EA-402C-8FFE-4FFD67669D67}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{51EC2950-51EA-402C-8FFE-4FFD67669D67}.Release|Any CPU.Build.0 = Release|Any CPU
+		{65B5EFF7-9423-4FFE-A8A6-6758411E63E0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{65B5EFF7-9423-4FFE-A8A6-6758411E63E0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{65B5EFF7-9423-4FFE-A8A6-6758411E63E0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{65B5EFF7-9423-4FFE-A8A6-6758411E63E0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

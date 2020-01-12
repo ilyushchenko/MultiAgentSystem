@@ -44,8 +44,17 @@
     <Compile Include="Models\Cell.cs" />
     <Compile Include="Interfaces\IUnit.cs" />
     <Compile Include="Models\Map.cs" />
-    <Compile Include="Models\Position.cs" />
+    <Compile Include="Models\Point.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Tools\AStarPathFinding.cs" />
+    <Compile Include="Tools\BFSAlgorithm.cs" />
+    <Compile Include="Tools\PathNode.cs" />
+    <Compile Include="Units\ShipModel\Direction.cs" />
+    <Compile Include="Units\ShipModel\Ship.cs" />
+    <Compile Include="Units\ShipModel\States\IState.cs" />
+    <Compile Include="Units\ShipModel\States\PathFindingState.cs" />
+    <Compile Include="Units\ShipModel\States\TransferState.cs" />
+    <Compile Include="Units\ShipModel\States\WaitState.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
