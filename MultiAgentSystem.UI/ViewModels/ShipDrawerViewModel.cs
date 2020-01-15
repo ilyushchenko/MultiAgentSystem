@@ -29,9 +29,27 @@ namespace MultiAgentSystem.UI.ViewModels
             _ship.OnMoved += ShipMovedHandler;
             _ship.OnPathChanged += OnPathChangedHandler;
             _ship.OnDirectionChanged += DirectionChangedHandler;
+            _ship.OnDie += DieHandler;
         }
 
-        private RenderTargetBitmap GetImage()
+        private void DieHandler()
+        {
+            _ship.OnMoved -= ShipMovedHandler;
+            _ship.OnPathChanged -= OnPathChangedHandler;
+            _ship.OnDirectionChanged -= DirectionChangedHandler;
+            _ship.OnDie -= DieHandler;
+            ClearSprites();
+            OnSpriteRemoved?.Invoke(this, _shipSprite);
+        }
+
+        private void ClearSprites()
+        {
+            foreach (var pathSprite in _pathSprites) 
+                OnSpriteRemoved?.Invoke(this, pathSprite);
+            _pathSprites.Clear();
+        }
+
+    private RenderTargetBitmap GetImage()
         {
             RenderTargetBitmap source = null;
             Application.Current.Dispatcher.Invoke(() =>
@@ -72,8 +90,7 @@ namespace MultiAgentSystem.UI.ViewModels
         {
             Application.Current.Dispatcher.Invoke(() =>
             {
-                foreach (var pathSprite in _pathSprites) OnSpriteRemoved?.Invoke(this, pathSprite);
-                _pathSprites.Clear();
+                ClearSprites();
 
                 var drawing = new DrawingVisual();
                 using (var context = drawing.RenderOpen())

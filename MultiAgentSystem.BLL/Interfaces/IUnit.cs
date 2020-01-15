@@ -11,5 +11,6 @@ namespace MultiAgentSystem.BLL.Interfaces
         void SetPosition(Point newPosition);
         void SetDirection(Direction newDirection);
         void SetTarget(Point target);
+        void Kill();
     }
 }

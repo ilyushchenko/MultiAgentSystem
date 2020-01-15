@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Timers;
 using System.Windows.Input;
 using MultiAgentSystem.BLL.Models;
@@ -121,6 +122,7 @@ namespace MultiAgentSystem.UI.ViewModels
         private void MakeStep()
         {
             Cycle++;
+            _ships.RemoveAll(ship => !ship.IsAlive);
             foreach (var ship in _ships) ship.DoActions();
         }
     }

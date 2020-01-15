@@ -1,4 +1,7 @@
-﻿using MultiAgentSystem.BLL.Interfaces;
+﻿using System.Collections.Generic;
+using System.Linq;
+using MultiAgentSystem.BLL.Interfaces;
+using MultiAgentSystem.BLL.Units.ShipModel;
 
 namespace MultiAgentSystem.BLL.Models
 {
@@ -49,14 +52,18 @@ namespace MultiAgentSystem.BLL.Models
 
         public void Move(IUnit unit, Point newPosition)
         {
-            var oldPosition = unit.CurrentPosition;
-            var oldCell = GetCell(oldPosition);
-
-            oldCell.RemoveUnit(unit);
+            RemoveUnit(unit);
 
             var newCell = GetCell(newPosition);
             newCell.AddUnit(unit);
             unit.SetPosition(newPosition);
+        }
+
+        public void RemoveUnit(IUnit unit)
+        {
+            var oldPosition = unit.CurrentPosition;
+            var oldCell = GetCell(oldPosition);
+            oldCell.RemoveUnit(unit);
         }
 
         public Cell GetCell(Point position)
@@ -70,6 +77,12 @@ namespace MultiAgentSystem.BLL.Models
         {
             var cell = GetCell(position);
             return cell.Depth;
+        }
+
+        public IEnumerable<IUnit> GetUnits(Point position)
+        {
+            var cell = GetCell(position);
+            return cell.GetUnits();
         }
 
         private int GetCellIndex(int x, int y)

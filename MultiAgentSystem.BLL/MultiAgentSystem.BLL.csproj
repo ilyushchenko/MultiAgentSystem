@@ -50,6 +50,8 @@
     <Compile Include="Tools\BFSAlgorithm.cs" />
     <Compile Include="Tools\PathNode.cs" />
     <Compile Include="Units\ShipModel\Direction.cs" />
+    <Compile Include="Units\ShipModel\Reflexes\DieReflex.cs" />
+    <Compile Include="Units\ShipModel\Reflexes\IReflex.cs" />
     <Compile Include="Units\ShipModel\Ship.cs" />
     <Compile Include="Units\ShipModel\States\ChangeDirectionState.cs" />
     <Compile Include="Units\ShipModel\States\IState.cs" />

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using MultiAgentSystem.BLL.Interfaces;
 using MultiAgentSystem.BLL.Models;
 using MultiAgentSystem.BLL.Tools;
+using MultiAgentSystem.BLL.Units.ShipModel.Reflexes;
 using MultiAgentSystem.BLL.Units.ShipModel.States;
 
 namespace MultiAgentSystem.BLL.Units.ShipModel
@@ -10,6 +11,7 @@ namespace MultiAgentSystem.BLL.Units.ShipModel
     public class Ship : IUnit
     {
         private readonly Map _map;
+        private readonly List<IReflex> _reflexes;
 
         private IShipState _currentState;
 
@@ -24,6 +26,10 @@ namespace MultiAgentSystem.BLL.Units.ShipModel
             
             _map = map ?? throw new ArgumentNullException(nameof(map));
 
+            _reflexes = new List<IReflex>()
+            {
+                new DieReflex(this, _map)
+            };
             _currentState = new WaitState();
             IsAlive = true;
             Path = new Queue<Point>();
@@ -40,6 +46,7 @@ namespace MultiAgentSystem.BLL.Units.ShipModel
         public event Action OnPathChanged;
         public event Action OnMoved;
         public event Action OnDirectionChanged;
+        public event Action OnDie;
         public Point CurrentPosition { get; private set; }
         public Direction MoveDirection { get; private set; }
 
@@ -57,7 +64,13 @@ namespace MultiAgentSystem.BLL.Units.ShipModel
 
         public void DoActions()
         {
-            if (IsAlive) _currentState.Handle();
+            if (!IsAlive) return;
+
+            _currentState.Handle();
+            foreach (var reflex in _reflexes)
+            {
+                reflex.DoReflex();
+            }
         }
 
         public void SetState(IShipState newState)
@@ -82,6 +95,13 @@ namespace MultiAgentSystem.BLL.Units.ShipModel
             SetPath(pathQueue);
 
             SetState(new TransferState(this, _map, Cell.Size));
+        }
+
+        public void Kill()
+        {
+            IsAlive = false;
+            _map.RemoveUnit(this);
+            OnDie?.Invoke();
         }
 
         private void SetPath(Queue<Point> path)
