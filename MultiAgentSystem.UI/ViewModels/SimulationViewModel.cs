@@ -91,7 +91,8 @@ namespace MultiAgentSystem.UI.ViewModels
 
         private void SpawnShipExecute(object obj)
         {
-            var ship = new Ship(_map);
+            var ship = new Ship(10f, 20f, _map);
+            ship.SetTarget(new Point(9, 9));
             _ships.Add(ship);
             _map.Move(ship, new Point(0, 0));
             Drawer.DrawShip(ship);

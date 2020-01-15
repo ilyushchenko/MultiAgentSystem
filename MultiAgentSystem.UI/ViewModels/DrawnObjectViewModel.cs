@@ -6,13 +6,22 @@ namespace MultiAgentSystem.UI.ViewModels
     {
         private int _x;
         private int _y;
+        private ImageSource _sprite;
 
         public DrawnObjectViewModel(ImageSource source)
         {
             Sprite = source;
         }
 
-        public ImageSource Sprite { get; }
+        public ImageSource Sprite
+        {
+            get => _sprite;
+            set
+            {
+                _sprite = value;
+                OnPropertyChanged();
+            }
+        }
 
         public int X
         {

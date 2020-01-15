@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Security.Policy;
 using System.Text;
 using System.Threading.Tasks;
 using MultiAgentSystem.BLL.Models;
@@ -10,27 +11,37 @@ namespace MultiAgentSystem.BLL.Units.ShipModel.States
     {
         private readonly Ship _ship;
         private readonly Map _map;
+        private float _cellLength;
 
-        public TransferState(Ship ship, Map map)
+        public TransferState(Ship ship, Map map, float cellLength)
         {
             _ship = ship;
             _map = map;
+            _cellLength = cellLength;
         }
 
         public void Handle()
         {
-            var currentCell = _map.GetCell(_ship.CurrentPosition);
+            if (_ship.Path.Count == 0) return;
 
-            if (_ship.Time > Cell.Size)
+            var nextPathPosition = _ship.Path.Peek();
+
+            var nextPositionByDirection = Point.GetFromDirection(_ship.CurrentPosition, _ship.MoveDirection);
+
+            if (nextPositionByDirection != nextPathPosition)
             {
-                _ship.Time -= Cell.Size;
-                if (_ship.Path.Count > 0)
-                {
-                    var nextPosition = _ship.Path[0];
-                    _ship.Path.RemoveAt(0);
-                    _map.Move(_ship, nextPosition);
-                    _ship.SetState(new WaitState(_ship, _map));
-                }
+                _ship.SetState(new ChangeDirectionState(_ship, _map));
+                return;
+            }
+
+            // Move by the direction
+            _cellLength -= _ship.Speed;
+
+            if (_cellLength <= 0f)
+            {
+                var nextPosition = _ship.Path.Dequeue();
+                _map.Move(_ship, nextPosition);
+                _cellLength = 50f;
             }
         }
     }

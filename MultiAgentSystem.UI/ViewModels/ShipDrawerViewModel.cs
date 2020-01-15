@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Globalization;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -19,15 +20,7 @@ namespace MultiAgentSystem.UI.ViewModels
             _ship = ship;
             Sprites = new ObservableCollection<DrawnObjectViewModel>();
 
-            var drawing = new DrawingVisual();
-            using (var context = drawing.RenderOpen())
-            {
-                context.DrawRectangle(Brushes.Blue, null,
-                    new Rect(new Point(0, 0), new Point(Constants.CellSize, Constants.CellSize)));
-            }
-
-            var source = new RenderTargetBitmap(Constants.CellSize, Constants.CellSize, 96, 96, PixelFormats.Pbgra32);
-            source.Render(drawing);
+            var source = GetImage();
 
             _shipSprite = new DrawnObjectViewModel(source);
             _pathSprites = new List<DrawnObjectViewModel>();
@@ -35,6 +28,42 @@ namespace MultiAgentSystem.UI.ViewModels
             Sprites.Add(_shipSprite);
             _ship.OnMoved += ShipMovedHandler;
             _ship.OnPathChanged += OnPathChangedHandler;
+            _ship.OnDirectionChanged += DirectionChangedHandler;
+        }
+
+        private RenderTargetBitmap GetImage()
+        {
+            RenderTargetBitmap source = null;
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                var drawing = new DrawingVisual();
+                using (var context = drawing.RenderOpen())
+                {
+                    context.DrawRectangle(Brushes.Blue, null,
+                        new Rect(new Point(0, 0), new Point(Constants.CellSize, Constants.CellSize)));
+
+                    var text = new FormattedText(_ship.MoveDirection.ToString(),
+                        CultureInfo.CurrentCulture,
+                        FlowDirection.LeftToRight,
+                        new Typeface(
+                            new FontFamily("Arial"),
+                            new FontStyle(),
+                            FontWeight.FromOpenTypeWeight(300),
+                            new FontStretch()),
+                        10,
+                        new SolidColorBrush(Colors.White),
+                        new NumberSubstitution(),
+                        96);
+
+                    context.DrawText(text, new Point(0, 0));
+                }
+
+
+                source =
+                    new RenderTargetBitmap(Constants.CellSize, Constants.CellSize, 96, 96, PixelFormats.Pbgra32);
+                source.Render(drawing);
+            });
+            return source;
         }
 
         public ObservableCollection<DrawnObjectViewModel> Sprites { get; set; }
@@ -53,7 +82,8 @@ namespace MultiAgentSystem.UI.ViewModels
                         new Point(25, 25), 5, 5);
                 }
 
-                var source = new RenderTargetBitmap(Constants.CellSize, Constants.CellSize, 96, 96, PixelFormats.Pbgra32);
+                var source =
+                    new RenderTargetBitmap(Constants.CellSize, Constants.CellSize, 96, 96, PixelFormats.Pbgra32);
                 source.Render(drawing);
 
                 foreach (var point in _ship.Path)
@@ -75,6 +105,11 @@ namespace MultiAgentSystem.UI.ViewModels
             _shipSprite.Y = _ship.CurrentPosition.Y * Constants.CellSize;
 
             OnPathChangedHandler();
+        }
+
+        private void DirectionChangedHandler()
+        {
+            _shipSprite.Sprite = GetImage();
         }
 
         public event EventHandler<DrawnObjectViewModel> OnSpriteAdded;

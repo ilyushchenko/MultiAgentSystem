@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using MultiAgentSystem.BLL.Interfaces;
 using MultiAgentSystem.BLL.Models;
+using MultiAgentSystem.BLL.Tools;
 using MultiAgentSystem.BLL.Units.ShipModel.States;
 
 namespace MultiAgentSystem.BLL.Units.ShipModel
@@ -9,30 +10,38 @@ namespace MultiAgentSystem.BLL.Units.ShipModel
     public class Ship : IUnit
     {
         private readonly Map _map;
-        public Point CurrentPosition { get; private set; }
-        public Direction MoveDirection { get; private set; }
-        
+
         private IShipState _currentState;
-        public float Time { get; set; }
-        public List<Point> Path { get; private set; }
-        public Point? TargetPosition { get; set; }
+
+        public Ship(float draft, float maxSpeed, Map map)
+        {
+            if (draft <= 0f) throw new ArgumentException("Draft must be positive value", nameof(draft));
+            Draft = draft;
+
+            if (maxSpeed <= 0f) throw new ArgumentException("MaxSpeed must be positive value", nameof(maxSpeed));
+            MaxSpeed = maxSpeed;
+            Speed = MaxSpeed;
+            
+            _map = map ?? throw new ArgumentNullException(nameof(map));
+
+            _currentState = new WaitState();
+            IsAlive = true;
+            Path = new Queue<Point>();
+        }
+
+        public float Speed { get; set; }
+        public float MaxSpeed { get; set; }
+
+        public float Draft { get; }
+        public Queue<Point> Path { get; private set; }
+        public Point? TargetPosition { get; private set; }
         public bool IsAlive { get; set; }
 
         public event Action OnPathChanged;
         public event Action OnMoved;
-
-        public Ship(Map map)
-        {
-            _map = map ?? throw new ArgumentNullException(nameof(map));
-            _currentState = new PathFindingState(this, _map);
-            IsAlive = true;
-            Path = new List<Point>();
-        }
-
-        public void DoActions()
-        {
-            if (IsAlive) _currentState.Handle();
-        }
+        public event Action OnDirectionChanged;
+        public Point CurrentPosition { get; private set; }
+        public Direction MoveDirection { get; private set; }
 
         public void SetPosition(Point newPosition)
         {
@@ -40,12 +49,42 @@ namespace MultiAgentSystem.BLL.Units.ShipModel
             OnMoved?.Invoke();
         }
 
+        public void SetDirection(Direction newDirection)
+        {
+            MoveDirection = newDirection;
+            OnDirectionChanged?.Invoke();
+        }
+
+        public void DoActions()
+        {
+            if (IsAlive) _currentState.Handle();
+        }
+
         public void SetState(IShipState newState)
         {
             _currentState = newState;
         }
 
-        public void SetPath(List<Point> path)
+        public void SetTarget(Point target)
+        {
+            TargetPosition = target;
+            
+            var arr = new int[_map.Width, _map.Height];
+            var path = AStarPathFinding.FindPath(arr, CurrentPosition, target);
+
+            if (path == null) return;
+
+            var pathQueue = new Queue<Point>(path);
+
+            // Remove current position from path queue
+            if (pathQueue.Peek() == CurrentPosition) pathQueue.Dequeue();
+
+            SetPath(pathQueue);
+
+            SetState(new TransferState(this, _map, Cell.Size));
+        }
+
+        private void SetPath(Queue<Point> path)
         {
             Path = path;
             OnPathChanged?.Invoke();

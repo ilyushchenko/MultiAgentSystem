@@ -66,6 +66,12 @@ namespace MultiAgentSystem.BLL.Models
             return newCell;
         }
 
+        public float GetCellDepth(Point position)
+        {
+            var cell = GetCell(position);
+            return cell.Depth;
+        }
+
         private int GetCellIndex(int x, int y)
         {
             var index = Height * y + x;

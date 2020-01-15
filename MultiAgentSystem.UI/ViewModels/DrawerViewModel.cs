@@ -24,13 +24,16 @@ namespace MultiAgentSystem.UI.ViewModels
 
         public void DrawShip(Ship ship)
         {
-            var drawer = new ShipDrawerViewModel(ship);
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                var drawer = new ShipDrawerViewModel(ship);
 
-            drawer.OnSpriteAdded += SpriteAddedHandler;
-            drawer.OnSpriteChanged += SpriteChangedHandler;
-            drawer.OnSpriteRemoved += SpriteRemovedHandler;
+                drawer.OnSpriteAdded += SpriteAddedHandler;
+                drawer.OnSpriteChanged += SpriteChangedHandler;
+                drawer.OnSpriteRemoved += SpriteRemovedHandler;
 
-            foreach (var sprite in drawer.Sprites) _drawableObjects.Add(sprite);
+                foreach (var sprite in drawer.Sprites) _drawableObjects.Add(sprite);
+            });
         }
 
         public void DrawMap(Map map)
