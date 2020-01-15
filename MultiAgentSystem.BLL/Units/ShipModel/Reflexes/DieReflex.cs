@@ -29,6 +29,12 @@ namespace MultiAgentSystem.BLL.Units.ShipModel.Reflexes
                 }
             }
 
+            var depth = _map.GetCellDepth(_ship.CurrentPosition);
+            if (depth <= _ship.Draft)
+            {
+                _ship.Kill();
+            }
+
         }
     }
 }

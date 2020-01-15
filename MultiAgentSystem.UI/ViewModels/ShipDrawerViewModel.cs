@@ -6,6 +6,7 @@ using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using MultiAgentSystem.BLL.Units.ShipModel;
+using Point = System.Windows.Point;
 
 namespace MultiAgentSystem.UI.ViewModels
 {
@@ -22,7 +23,11 @@ namespace MultiAgentSystem.UI.ViewModels
 
             var source = GetImage();
 
-            _shipSprite = new DrawnObjectViewModel(source);
+            _shipSprite = new DrawnObjectViewModel(source)
+            {
+                X =  _ship.CurrentPosition.X * Constants.CellSize,
+                Y =  _ship.CurrentPosition.Y * Constants.CellSize
+            };
             _pathSprites = new List<DrawnObjectViewModel>();
 
             Sprites.Add(_shipSprite);

@@ -16,6 +16,8 @@ namespace MultiAgentSystem.UI.ViewModels
         private int _delay;
         private Map _map;
         private int _mapSize;
+        private int _spawnX;
+        private int _spawnY;
 
         public SimulationViewModel()
         {
@@ -75,6 +77,26 @@ namespace MultiAgentSystem.UI.ViewModels
             }
         }
 
+        public int SpawnX
+        {
+            get => _spawnX;
+            set
+            {
+                _spawnX = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public int SpawnY
+        {
+            get => _spawnY;
+            set
+            {
+                _spawnY = value;
+                OnPropertyChanged();
+            }
+        }
+
         private void StopExecute(object obj)
         {
             _autoCycleTimer.Stop();
@@ -93,9 +115,9 @@ namespace MultiAgentSystem.UI.ViewModels
         private void SpawnShipExecute(object obj)
         {
             var ship = new Ship(10f, 20f, _map);
-            ship.SetTarget(new Point(9, 9));
             _ships.Add(ship);
-            _map.Move(ship, new Point(0, 0));
+            _map.Move(ship, new Point(SpawnX, SpawnY));
+            ship.SetTarget(new Point(9, 9));
             Drawer.DrawShip(ship);
         }
 
