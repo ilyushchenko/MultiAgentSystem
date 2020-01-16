@@ -1,4 +1,5 @@
 ﻿using MultiAgentSystem.BLL.Interfaces;
+using MultiAgentSystem.BLL.Models.Generation;
 
 namespace MultiAgentSystem.BLL.Models
 {
@@ -6,7 +7,11 @@ namespace MultiAgentSystem.BLL.Models
     {
         private readonly Cell[] _cells;
 
-        public Map(int width, int height)
+        public Map(int width, int height) : this(width, height, new RandomMapGeneration(30, -10))
+        {
+        }
+
+        public Map(int width, int height, IMapGenerator generator)
         {
             Width = width;
             Height = height;
@@ -16,11 +21,8 @@ namespace MultiAgentSystem.BLL.Models
             for (var y = 0; y < Height; y++)
             for (var x = 0; x < Width; x++)
             {
-                //TODO: Add generation strategy
-                var coefficient = (float) (x + y) / (Height + Width);
-                var depth = 60f * coefficient;
                 var index = GetCellIndex(x, y);
-                _cells[index] = new Cell(new Point(x, y), -30 + depth);
+                _cells[index] = generator.GetCell(new Point(x, y));
             }
         }
 
