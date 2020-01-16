@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.Globalization;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using MultiAgentSystem.BLL.Models;
 using MultiAgentSystem.BLL.Units.ShipModel;
+using MultiAgentSystem.UI.Internal;
 using GraphicsPoint = System.Windows.Point;
 using Point = MultiAgentSystem.BLL.Models.Point;
 
@@ -63,6 +65,10 @@ namespace MultiAgentSystem.UI.ViewModels
                 {
                     context.DrawRectangle(brush, new Pen(Brushes.Black, 2),
                         new Rect(new GraphicsPoint(0, 0), new GraphicsPoint(Constants.CellSize, Constants.CellSize)));
+
+                    var text = DrawingHelpers.GetFormattedText(cell.Depth.ToString(CultureInfo.CurrentCulture), 10, new SolidColorBrush(Colors.Black));
+                    context.DrawText(text, new GraphicsPoint(10, 25));
+
                 }
 
 

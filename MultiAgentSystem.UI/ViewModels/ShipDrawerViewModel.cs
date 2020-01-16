@@ -6,6 +6,7 @@ using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using MultiAgentSystem.BLL.Units.ShipModel;
+using MultiAgentSystem.UI.Internal;
 using Point = System.Windows.Point;
 
 namespace MultiAgentSystem.UI.ViewModels
@@ -65,18 +66,7 @@ namespace MultiAgentSystem.UI.ViewModels
                     context.DrawRectangle(Brushes.Blue, null,
                         new Rect(new Point(0, 0), new Point(Constants.CellSize, Constants.CellSize)));
 
-                    var text = new FormattedText(_ship.MoveDirection.ToString(),
-                        CultureInfo.CurrentCulture,
-                        FlowDirection.LeftToRight,
-                        new Typeface(
-                            new FontFamily("Arial"),
-                            new FontStyle(),
-                            FontWeight.FromOpenTypeWeight(300),
-                            new FontStretch()),
-                        10,
-                        new SolidColorBrush(Colors.White),
-                        new NumberSubstitution(),
-                        96);
+                    var text = DrawingHelpers.GetFormattedText(_ship.MoveDirection.ToString(), 10, new SolidColorBrush(Colors.White));
 
                     context.DrawText(text, new Point(0, 0));
                 }

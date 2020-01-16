@@ -83,6 +83,18 @@ namespace MultiAgentSystem.BLL.Units.ShipModel
             TargetPosition = target;
             
             var arr = new int[_map.Width, _map.Height];
+             
+            for (var x = 0; x < _map.Width; x++)
+            {
+                for (var y = 0; y < _map.Height; y++)
+                {
+                    if (_map.GetCellDepth(new Point(x, y)) <= Draft)
+                    {
+                        arr[x, y] = -1;
+                    }
+                }
+            }
+
             var path = AStarPathFinding.FindPath(arr, CurrentPosition, target);
 
             if (path == null) return;

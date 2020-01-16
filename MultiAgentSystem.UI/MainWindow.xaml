@@ -76,6 +76,7 @@
 
                         <GroupBox Header="Ship creation">
                             <StackPanel>
+                                <Label Content="Position" />
                                 <Grid>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition />
@@ -91,14 +92,70 @@
                                            Grid.Row="0"
                                            Content="X" />
                                     <TextBox Text="{Binding SpawnX}"
-                                        Grid.Column="0"
+                                             Grid.Column="0"
                                              Grid.Row="1" />
 
                                     <Label Grid.Column="1"
                                            Grid.Row="0"
                                            Content="Y" />
                                     <TextBox Text="{Binding SpawnY}"
-                                        Grid.Column="1"
+                                             Grid.Column="1"
+                                             Grid.Row="1" />
+
+                                </Grid>
+
+                                <Label Content="Target" />
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition />
+                                        <ColumnDefinition />
+                                    </Grid.ColumnDefinitions>
+
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition />
+                                        <RowDefinition />
+                                    </Grid.RowDefinitions>
+
+                                    <Label Grid.Column="0"
+                                           Grid.Row="0"
+                                           Content="X" />
+                                    <TextBox Text="{Binding TargetX}"
+                                             Grid.Column="0"
+                                             Grid.Row="1" />
+
+                                    <Label Grid.Column="1"
+                                           Grid.Row="0"
+                                           Content="Y" />
+                                    <TextBox Text="{Binding TargetY}"
+                                             Grid.Column="1"
+                                             Grid.Row="1" />
+
+                                </Grid>
+
+                                <Grid>
+
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition />
+                                        <RowDefinition />
+                                    </Grid.RowDefinitions>
+
+                                    <Label Grid.Row="0"
+                                           Content="Draft" />
+                                    <TextBox Text="{Binding Draft}"
+                                             Grid.Row="1" />
+
+                                </Grid>
+
+                                <Grid>
+
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition />
+                                        <RowDefinition />
+                                    </Grid.RowDefinitions>
+
+                                    <Label Grid.Row="0"
+                                           Content="Speed" />
+                                    <TextBox Text="{Binding Speed}"
                                              Grid.Row="1" />
 
                                 </Grid>

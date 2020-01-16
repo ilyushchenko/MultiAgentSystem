@@ -75,11 +75,19 @@ namespace MultiAgentSystem.BLL.Tools
             var result = new Collection<PathNode>();
 
             // Соседними точками являются соседние по стороне клетки.
-            Point[] neighbourPoints = new Point[4];
-            neighbourPoints[0] = new Point(pathNode.Position.X + 1, pathNode.Position.Y);
-            neighbourPoints[1] = new Point(pathNode.Position.X - 1, pathNode.Position.Y);
-            neighbourPoints[2] = new Point(pathNode.Position.X, pathNode.Position.Y + 1);
-            neighbourPoints[3] = new Point(pathNode.Position.X, pathNode.Position.Y - 1);
+            var neighbourPoints = new List<Point>();
+            for (int dx = -1; dx <= 1; dx++)
+            {
+                for (int dy = -1; dy <= 1; dy++)
+                {
+                    if (dy == 0 && dy == 0)
+                    {
+                        continue;
+                    }
+                    var neighbourPoint = new Point(pathNode.Position.X + dx, pathNode.Position.Y + dy);
+                    neighbourPoints.Add(neighbourPoint);
+                }
+            }
 
             foreach (var point in neighbourPoints)
             {

@@ -18,6 +18,10 @@ namespace MultiAgentSystem.UI.ViewModels
         private int _mapSize;
         private int _spawnX;
         private int _spawnY;
+        private int _targetY;
+        private int _targetX;
+        private float _draft;
+        private float _speed;
 
         public SimulationViewModel()
         {
@@ -29,6 +33,8 @@ namespace MultiAgentSystem.UI.ViewModels
             StepCommand = new RelayCommand(StepExecute);
             Delay = 100;
             MapSize = 10;
+            Draft = 5;
+            Speed = 20;
 
             _autoCycleTimer.Elapsed += AutoCycleTimerOnElapsed;
             _autoCycleTimer.Interval = Delay;
@@ -97,6 +103,46 @@ namespace MultiAgentSystem.UI.ViewModels
             }
         }
 
+        public int TargetX
+        {
+            get => _targetX;
+            set
+            {
+                _targetX = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public int TargetY
+        {
+            get => _targetY;
+            set
+            {
+                _targetY = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public float Draft
+        {
+            get => _draft;
+            set
+            {
+                _draft = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public float Speed
+        {
+            get => _speed;
+            set
+            {
+                _speed = value;
+                OnPropertyChanged();
+            }
+        }
+
         private void StopExecute(object obj)
         {
             _autoCycleTimer.Stop();
@@ -114,10 +160,10 @@ namespace MultiAgentSystem.UI.ViewModels
 
         private void SpawnShipExecute(object obj)
         {
-            var ship = new Ship(10f, 20f, _map);
+            var ship = new Ship(Draft, Speed, _map);
             _ships.Add(ship);
             _map.Move(ship, new Point(SpawnX, SpawnY));
-            ship.SetTarget(new Point(9, 9));
+            ship.SetTarget(new Point(TargetX, TargetY));
             Drawer.DrawShip(ship);
         }
 

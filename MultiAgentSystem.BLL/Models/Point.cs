@@ -52,9 +52,9 @@ namespace MultiAgentSystem.BLL.Models
             switch (direction)
             {
                 case Direction.Nord:
-                    return new Point(position.X, position.Y - -1);
+                    return new Point(position.X, position.Y - 1);
                 case Direction.NordEast:
-                    return new Point(position.X + 1, position.Y - -1);
+                    return new Point(position.X + 1, position.Y - 1);
                 case Direction.East:
                     return new Point(position.X + 1, position.Y);
                 case Direction.SouthEast:
